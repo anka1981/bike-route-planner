@@ -1,0 +1,32 @@
+# Bau-Rezept fuer F-Droid.
+#
+# Diese Datei gehoert nicht in diese App, sondern in F-Droids Datensammlung
+# (fdroiddata), dort unter metadata/io.github.anka1981.bikerouteplanner.yml.
+# Sie liegt hier als versionierte Kopie, damit sie bei jeder Version mitwaechst.
+#
+# Titel, Kurz- und Langbeschreibung sowie die Bildschirmfotos holt sich F-Droid
+# selbst aus dem Ordner fastlane/ dieses Repositorys.
+
+Categories:
+  - Navigation
+  - Sports & Health
+License: GPL-3.0-only
+AuthorName: anka1981
+SourceCode: https://github.com/anka1981/bike-route-planner
+IssueTracker: https://github.com/anka1981/bike-route-planner/issues
+
+RepoType: git
+Repo: https://github.com/anka1981/bike-route-planner.git
+
+Builds:
+  - versionName: '1.9'
+    versionCode: 10
+    commit: v1.9
+    subdir: app
+    gradle:
+      - prod
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: '1.9'
+CurrentVersionCode: 10
