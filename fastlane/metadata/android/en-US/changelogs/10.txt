@@ -1,0 +1,4 @@
+* Route statistics: length, traffic lights, and travel time at several speeds
+* Events on the route (closures, roadworks, markets) with an alternative route around them
+* The selected route preference profile stays active after restarting the app
+* Complete light, dark, and colourful themes, including buttons and the status bar

@@ -1,0 +1,31 @@
+BikeRoutePlanner berechnet Fahrradrouten mit der Routensuche von bbbike, zeigt die
+wichtigsten Kennzahlen dazu an und gibt die Route als GPX-Track an eine Karten- oder
+Navigations-App weiter.
+
+<b>Funktionen</b>
+
+* Routen über beliebig viele Wegpunkte. Start, Zwischenstopps und Ziel per Adresssuche,
+  Karte, aktuellem Standort, Kontakten oder gespeicherten Favoriten festlegen.
+* Ein Knopf dreht die Reihenfolge für den Rückweg um.
+* Alle Wegeeinstellungen von bbbike: Kategorie, Wegequalität, grüne Wege, Geschwindigkeit,
+  Ampeln, Fähren, unbeleuchtete Wege sowie Anhänger oder Kindersitz. Mehrere Einstellungen
+  lassen sich als benannte Profile speichern.
+* Routen-Statistik: Länge, Anzahl der Ampeln und die Fahrzeit laut bbbike bei 10, 15, 20
+  und 25 km/h.
+* Ereignisse auf der Route: Sperrungen, Baustellen und Märkte, die die Strecke berühren.
+  Auf Wunsch berechnet die App eine Ausweichroute darum herum. Diese Meldungen gibt es
+  nur für Berlin, weil bbbike sie nur dort führt.
+* Karte in der App mit der berechneten Route und der eigenen Position.
+* Navigation direkt in OsmAnd oder Weitergabe der GPX-Datei an jede Karten-App.
+* Oberfläche auf Deutsch und Englisch, Farbschemata Hell, Dunkel, Farbig und System.
+
+<b>Datenquellen</b>
+
+Routen kommen von der offiziellen bbbike-Schnittstelle, die Adresssuche von OpenStreetMap
+Nominatim, die Kartenkacheln von OpenTopoMap. Die Ereignisse stammen von www.bbbike.de.
+
+<b>Datenschutz</b>
+
+Die App braucht kein Konto und sendet keine Nutzungsdaten. Adressen und Koordinaten gehen
+nur an die genannten Dienste, damit die Route berechnet werden kann. Favoriten, Profile und
+Einstellungen bleiben auf dem Gerät.

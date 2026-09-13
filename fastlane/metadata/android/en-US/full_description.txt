@@ -1,0 +1,30 @@
+BikeRoutePlanner calculates bike routes using the bbbike routing service, shows the key
+figures for them, and hands the route to a map or navigation app as a GPX track.
+
+<b>Features</b>
+
+* Routes over any number of waypoints. Set start, stops, and destination by address search,
+  map, current location, contacts, or saved favourites.
+* One button reverses the order for the return trip.
+* All bbbike route preferences: category, surface quality, green routes, speed, traffic
+  lights, ferries, unlit ways, and travelling with a trailer or a child seat. Preferences
+  can be stored as named profiles.
+* Route statistics: length, number of traffic lights, and bbbike's travel time at 10, 15,
+  20, and 25 km/h.
+* Events on the route: closures, roadworks, and markets that affect it. On request the app
+  calculates an alternative route around them. These reports exist for Berlin only, because
+  that is the only place bbbike keeps them.
+* In-app map showing the calculated route and your own position.
+* Navigation directly in OsmAnd, or sharing the GPX file with any map app.
+* Interface in German and English; light, dark, colourful, and system themes.
+
+<b>Data sources</b>
+
+Routes come from the official bbbike interface, address search from OpenStreetMap
+Nominatim, map tiles from OpenTopoMap. The events come from www.bbbike.de.
+
+<b>Privacy</b>
+
+The app needs no account and sends no usage data. Addresses and coordinates go only to the
+services named above, so that the route can be calculated. Favourites, profiles, and
+settings stay on the device.

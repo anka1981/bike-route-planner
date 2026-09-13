@@ -1,0 +1,4 @@
+* Routen-Statistik: Länge, Ampeln und Fahrzeit bei mehreren Geschwindigkeiten
+* Ereignisse auf der Route (Sperrungen, Baustellen, Märkte) mit Ausweichroute
+* Das gewählte Wegeeinstellungs-Profil bleibt nach einem Neustart aktiv
+* Vollständige Farbschemata für Hell, Dunkel und Farbig, auch für Knöpfe und Statusleiste
