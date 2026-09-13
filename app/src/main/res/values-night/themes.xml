@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Dunkles Fenster-Theme im System-Dunkelmodus, damit beim Start kein weisser Blitz erscheint. -->
+    <style name="Theme.BikeRoutePlanner" parent="android:Theme.Material.NoActionBar" />
+</resources>

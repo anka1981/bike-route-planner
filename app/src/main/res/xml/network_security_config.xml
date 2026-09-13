@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+
+    <!-- Standard bleibt: nur verschluesselte Verbindungen. -->
+    <base-config cleartextTrafficPermitted="false" />
+
+    <!-- www.bbbike.de ist ausschliesslich per http erreichbar (auf Port 443 antwortet nichts).
+         Nur diese eine Domain wird deshalb freigegeben, und auch nur fuer die Ereignisse
+         (temporaere Sperrungen) sowie die Ausweichroute; das eigentliche Routing laeuft
+         weiterhin verschluesselt ueber api.bbbike.org. -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">www.bbbike.de</domain>
+    </domain-config>
+</network-security-config>

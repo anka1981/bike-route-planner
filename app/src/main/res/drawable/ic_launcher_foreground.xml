@@ -1,0 +1,22 @@
+<!--
+Radfahrer-Silhouette basierend auf dem "person-biking"-Icon von Font Awesome Free
+(https://fontawesome.com, Icons: CC BY 4.0, Copyright Fonticons, Inc.), Original-Pfad
+unveraendert uebernommen, nur per Group-Transform skaliert/zentriert und eingefaerbt.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:scaleX="0.1"
+        android:scaleY="0.1"
+        android:pivotX="0"
+        android:pivotY="0"
+        android:translateX="22"
+        android:translateY="30">
+        <path
+            android:fillColor="#1B5E20"
+            android:pathData="M400,96a48,48 0,1 0,0,-96a48,48 0,1 0,0,96zM427.2,160l-61.8,-48.8c-17.3,-13.6 -41.7,-13.8 -59.1,-0.3l-83.1,64.2c-30.7,23.8 -28.5,70.8 4.3,91.6L288,305.1 288,416c0,17.7 14.3,32 32,32s32,-14.3 32,-32l0,-128c0,-10.7 -5.3,-20.7 -14.2,-26.6L295,232.9l60.3,-48.5L396,217c5.7,4.5 12.7,7 20,7l64,0c17.7,0 32,-14.3 32,-32s-14.3,-32 -32,-32l-52.8,0zM56,384a72,72 0,1 1,144 0a72,72 0,1 1,-144 0zM256,384A128,128 0,1 0,0,384a128,128 0,1 0,256 0zM440,384a72,72 0,1 1,144 0a72,72 0,1 1,-144 0zM640,384a128,128 0,1 0,-256 0a128,128 0,1 0,256 0z" />
+    </group>
+</vector>
