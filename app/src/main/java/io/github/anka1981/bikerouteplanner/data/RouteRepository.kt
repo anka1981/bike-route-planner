@@ -49,8 +49,11 @@ class RouteRepository(
     ): ComputedRoute = withContext(Dispatchers.IO) {
         require(waypoints.size >= 2) { strings.minRouteWaypointsRequired }
 
-        val berlin = settings.citySlug.lowercase(Locale.US) in BbbikeDeApi.BERLIN_SLUGS
-        val avoiding = berlin && avoidEventIds.isNotEmpty()
+        // Ereignisse - und damit auch Ausweichrouten - gibt es nur fuer Berlin, und nur wenn die
+        // dafuer noetige unverschluesselte Abfrage in den Einstellungen erlaubt ist.
+        val eventsAvailable = settings.loadRouteEvents &&
+            settings.citySlug.lowercase(Locale.US) in BbbikeDeApi.BERLIN_SLUGS
+        val avoiding = eventsAvailable && avoidEventIds.isNotEmpty()
 
         val legs = mutableListOf<BbbikeLeg>()
         for (i in 0 until waypoints.size - 1) {
@@ -72,7 +75,7 @@ class RouteRepository(
             val leg = BbbikeJsonParser.parseLeg(text) ?: throw RouteComputationException(
                 strings.unexpectedBbbikeResponse(i + 1, from.label, to.label, settings.citySlug, text.take(200))
             )
-            legs.add(if (!avoiding && berlin) leg.copy(events = fetchEvents(from, to, prefs, settings)) else leg)
+            legs.add(if (!avoiding && eventsAvailable) leg.copy(events = fetchEvents(from, to, prefs, settings)) else leg)
         }
 
         val allPoints = GpxMerger.joinLegs(legs.map { it.points })

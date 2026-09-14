@@ -1,0 +1,5 @@
+* New setting "Load events on the route": the request to www.bbbike.de can be switched off,
+  and the help text now names the unencrypted http and the risk explicitly
+* With the request off, the events button is hidden entirely
+* The settings screen scrolls now; help texts and the "Help" and "About" buttons used to be
+  cut off at the bottom

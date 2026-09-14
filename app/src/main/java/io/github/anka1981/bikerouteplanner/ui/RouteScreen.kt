@@ -272,16 +272,20 @@ fun RouteScreen(
                             color = MaterialTheme.colorScheme.primary
                         )
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedButton(
-                        onClick = {
-                            selectedEventIds = state.events.mapNotNull { it.id }.toSet()
-                            showEventsDialog = true
-                        },
-                        enabled = state.events.isNotEmpty(),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(strings.eventsButton(state.events.size))
+                    // Ohne die Ereignis-Abfrage in den Einstellungen gibt es nichts anzuzeigen,
+                    // dann faellt der Knopf ganz weg statt nur ausgegraut dazustehen.
+                    if (settings.loadRouteEvents) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedButton(
+                            onClick = {
+                                selectedEventIds = state.events.mapNotNull { it.id }.toSet()
+                                showEventsDialog = true
+                            },
+                            enabled = state.events.isNotEmpty(),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(strings.eventsButton(state.events.size))
+                        }
                     }
                     if (showEventsDialog) {
                         RouteEventsDialog(

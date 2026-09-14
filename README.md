@@ -34,6 +34,10 @@ der Sperrungen immer leer. Diese Seite ist nur über unverschlüsseltes http err
 deshalb erlaubt `app/src/main/res/xml/network_security_config.xml` Klartextverkehr gezielt
 für diese eine Domain. Alles andere bleibt auf verschlüsselte Verbindungen beschränkt.
 
+Abschalten lässt sich das in den App-Einstellungen unter „Ereignisse auf der Route laden“.
+Dann nimmt die App überhaupt keine Verbindung zu `www.bbbike.de` auf, und der Ereignis-Knopf
+bleibt leer.
+
 ## Bauen
 
 Android Studio oder Gradle, JDK 17+ und Android SDK (compileSdk 37, minSdk 26):

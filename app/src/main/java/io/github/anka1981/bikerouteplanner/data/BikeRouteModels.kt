@@ -66,7 +66,12 @@ data class AppSettings(
     /** Sprache der App-Oberfläche selbst, siehe ui/i18n/AppStrings.kt. */
     val uiLanguage: String = "de",
     /** "system", "light", "dark" oder "colorful", siehe ui/theme/AppColorTheme. */
-    val colorTheme: String = "system"
+    val colorTheme: String = "system",
+    /**
+     * Ob die Ereignisse (temporaere Sperrungen) bei www.bbbike.de abgefragt werden duerfen.
+     * Diese Abfrage laeuft unverschluesselt per http, weil die Seite kein https anbietet.
+     */
+    val loadRouteEvents: Boolean = true
 )
 
 /** Fahrzeit laut bbbike fuer eine Geschwindigkeitsstufe. */

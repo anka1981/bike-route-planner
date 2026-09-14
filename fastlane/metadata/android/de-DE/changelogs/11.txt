@@ -1,0 +1,6 @@
+* Neue Einstellung "Ereignisse auf der Route laden": Die Abfrage bei www.bbbike.de lässt
+  sich abschalten, der Hinweistext nennt jetzt ausdrücklich das unverschlüsselte http und
+  das Risiko
+* Ist die Abfrage aus, entfällt der Ereignis-Knopf ganz
+* Die Einstellungsseite lässt sich scrollen; Hinweise und die Knöpfe "Hilfe" und "Über
+  diese App" waren unten abgeschnitten

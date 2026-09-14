@@ -1,6 +1,7 @@
 package io.github.anka1981.bikerouteplanner.data
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.datastore.preferences.core.edit
@@ -18,6 +19,7 @@ private object Keys {
     val ROUTING_LANGUAGE = stringPreferencesKey("routing_language")
     val UI_LANGUAGE = stringPreferencesKey("ui_language")
     val COLOR_THEME = stringPreferencesKey("color_theme")
+    val LOAD_ROUTE_EVENTS = booleanPreferencesKey("load_route_events")
 
     val PROFILES = stringPreferencesKey("route_profiles_json")
     val ACTIVE_PROFILE_ID = stringPreferencesKey("active_route_profile_id")
@@ -35,7 +37,8 @@ class SettingsRepository(private val context: Context) {
             citySlug = prefs[Keys.CITY_SLUG] ?: "Berlin",
             routingLanguage = prefs[Keys.ROUTING_LANGUAGE] ?: "de",
             uiLanguage = prefs[Keys.UI_LANGUAGE] ?: "de",
-            colorTheme = prefs[Keys.COLOR_THEME] ?: "system"
+            colorTheme = prefs[Keys.COLOR_THEME] ?: "system",
+            loadRouteEvents = prefs[Keys.LOAD_ROUTE_EVENTS] ?: true
         )
     }
 
@@ -64,6 +67,7 @@ class SettingsRepository(private val context: Context) {
             prefs[Keys.ROUTING_LANGUAGE] = settings.routingLanguage
             prefs[Keys.UI_LANGUAGE] = settings.uiLanguage
             prefs[Keys.COLOR_THEME] = settings.colorTheme
+            prefs[Keys.LOAD_ROUTE_EVENTS] = settings.loadRouteEvents
         }
     }
 

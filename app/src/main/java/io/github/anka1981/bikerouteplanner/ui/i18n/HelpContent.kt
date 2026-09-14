@@ -100,6 +100,7 @@ fun helpSections(strings: AppStrings): List<HelpSection> = if (strings.languageC
             listOf(
                 HelpItem(null, "City / region field", "The bbbike instance to route on, with autocomplete; \"Refresh city list\" reloads it from bbbike.org."),
                 HelpItem(Icons.Filled.Visibility, "Show/hide appid", "Toggles whether your bbbike appid is shown in plain text or masked."),
+                HelpItem(null, "Load events on the route", "Switch: when on, the app asks www.bbbike.de for closures on the calculated route. That single request runs over unencrypted http because the site offers no https; switched off, the app never contacts it and the events button stays empty."),
                 HelpItem(null, "Routing language / UI language / color theme", "Language bbbike replies in, this app's own display language, and the app theme: System (follows the phone's dark mode and wallpaper colors), Light, Dark, or Colorful. The switch applies immediately to everything, including buttons, switches, menus, and the status bar."),
                 HelpItem(Icons.Filled.Info, "About this app", "Version info, the OsmAnd setup guide, and all data sources this app uses.")
             )
@@ -174,6 +175,7 @@ fun helpSections(strings: AppStrings): List<HelpSection> = if (strings.languageC
             listOf(
                 HelpItem(null, "Stadt/Region-Feld", "Die bbbike-Instanz, auf der geroutet wird, mit Autovervollständigung; \"Städteliste aktualisieren\" lädt sie neu von bbbike.org."),
                 HelpItem(Icons.Filled.Visibility, "appid ein-/ausblenden", "Schaltet um, ob die bbbike-appid im Klartext oder maskiert angezeigt wird."),
+                HelpItem(null, "Ereignisse auf der Route laden", "Schalter: Eingeschaltet fragt die App bei www.bbbike.de Sperrungen zur berechneten Route ab. Diese eine Abfrage läuft unverschlüsselt über http, weil die Seite kein https anbietet; ausgeschaltet nimmt die App keine Verbindung dorthin auf und der Ereignis-Knopf bleibt leer."),
                 HelpItem(null, "Routensprache / UI-Sprache / Farbschema", "Sprache der bbbike-Antworten, Anzeigesprache der App selbst, sowie das App-Design: System (folgt Dunkelmodus und Hintergrundbild-Farben des Handys), Hell, Dunkel oder Farbig. Die Umstellung wirkt sofort auf alles, auch auf Knöpfe, Schalter, Menüs und die Statusleiste."),
                 HelpItem(Icons.Filled.Info, "Über diese App", "Versionsinfo, die OsmAnd-Einrichtungsanleitung und alle von dieser App genutzten Datenquellen.")
             )

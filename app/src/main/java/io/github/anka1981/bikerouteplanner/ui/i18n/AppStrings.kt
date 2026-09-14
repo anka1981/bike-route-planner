@@ -123,6 +123,8 @@ interface AppStrings {
     val uiLanguageLabel: String
     val colorThemeLabel: String
     val colorThemeOptions: List<Pair<String, String>>
+    val routeEventsLabel: String
+    val routeEventsHelp: String
     val aboutButton: String
     val helpButton: String
     val helpTitle: String
@@ -284,6 +286,13 @@ object GermanStrings : AppStrings {
             "Nutzung auf bbbike.org eine eigene appid anfragen (siehe bbbike.org/api.html)."
     override val routingLanguageLabel = "Sprache der Routing-Antwort (de, en, es, fr, ru)"
     override val uiLanguageLabel = "App-Sprache"
+    override val routeEventsLabel = "Ereignisse auf der Route laden"
+    override val routeEventsHelp =
+        "Fragt bei www.bbbike.de Sperrungen, Baustellen und Märkte zur Route ab und ermöglicht " +
+            "die Ausweichroute. Nur für Berlin. Achtung: Diese Abfrage läuft unverschlüsselt " +
+            "über http, weil die Seite kein https anbietet. Start und Ziel sind dabei im Netz " +
+            "mitlesbar, und die Antwort ließe sich unterwegs verändern. Ausgeschaltet nimmt die " +
+            "App keine Verbindung zu www.bbbike.de auf."
     override val colorThemeLabel = "App-Design"
     override val colorThemeOptions = listOf(
         "system" to "System",
@@ -468,6 +477,13 @@ object EnglishStrings : AppStrings {
             "own appid at bbbike.org (see bbbike.org/api.html)."
     override val routingLanguageLabel = "Routing response language (de, en, es, fr, ru)"
     override val uiLanguageLabel = "App language"
+    override val routeEventsLabel = "Load events on the route"
+    override val routeEventsHelp =
+        "Asks www.bbbike.de for closures, roadworks, and markets along the route and enables " +
+            "the alternative route. Berlin only. Caution: this request uses unencrypted http, " +
+            "because the site offers no https. Start and destination are readable on the " +
+            "network, and the response could be tampered with on the way. When switched off, " +
+            "the app never connects to www.bbbike.de."
     override val colorThemeLabel = "App theme"
     override val colorThemeOptions = listOf(
         "system" to "System",
