@@ -3,6 +3,8 @@
 # Diese Datei gehoert nicht in diese App, sondern in F-Droids Datensammlung
 # (fdroiddata), dort unter metadata/io.github.anka1981.bikerouteplanner.yml.
 # Sie liegt hier als versionierte Kopie, damit sie bei jeder Version mitwaechst.
+# Beim Einreichen die Kommentarzeilen weglassen, fdroiddata schreibt die Dateien
+# automatisch um.
 #
 # Titel, Kurz- und Langbeschreibung sowie die Bildschirmfotos holt sich F-Droid
 # selbst aus dem Ordner fastlane/ dieses Repositorys.
@@ -26,7 +28,14 @@ Builds:
     gradle:
       - prod
 
+  - versionName: '1.10'
+    versionCode: 11
+    commit: v1.10
+    subdir: app
+    gradle:
+      - prod
+
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: '1.9'
-CurrentVersionCode: 10
+CurrentVersion: '1.10'
+CurrentVersionCode: 11
