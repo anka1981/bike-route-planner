@@ -91,8 +91,15 @@ object OsmAndAidlHelper {
 
     private val connections = mutableMapOf<String, ServiceConnection>()
 
+    // OsmAnd ist eine grosse App mit eigener Kartenengine; ist ihr Prozess noch nicht am Laufen,
+    // dauert das Hochfahren (das BIND_AUTO_CREATE hier erst anstoesst) auf manchen Geraeten
+    // deutlich laenger als ein paar Sekunden. Ein zu kurzes Timeout liess den Bind-Versuch dann
+    // fehlschlagen, obwohl OsmAnd kurz danach durchaus geantwortet haette - beobachtbares Symptom
+    // war, dass das Senden nur klappte, wenn OsmAnd vorher schon manuell geoeffnet (und damit warm)
+    // war. Ein bereits laufendes OsmAnd bindet weiterhin praktisch sofort, dieses Timeout greift
+    // also nur im Kaltstart-Fall.
     private suspend fun bindOsmAndService(context: Context, packageName: String): IBinder? =
-        withTimeoutOrNull(3000) {
+        withTimeoutOrNull(15000) {
             suspendCancellableCoroutine { cont ->
                 val intent = Intent(BIND_ACTION).apply { setPackage(packageName) }
                 val connection = object : ServiceConnection {
