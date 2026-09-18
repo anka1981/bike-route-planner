@@ -35,7 +35,14 @@ Builds:
     gradle:
       - prod
 
+  - versionName: '1.10'
+    versionCode: 12
+    commit: v1.10-12
+    subdir: app
+    gradle:
+      - prod
+
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
 CurrentVersion: '1.10'
-CurrentVersionCode: 11
+CurrentVersionCode: 12
