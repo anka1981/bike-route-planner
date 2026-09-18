@@ -1,0 +1,7 @@
+* Fixed OsmAnd navigation: OsmAnd only accepted the "navigate route" command while its own map
+  screen was already open (a quirk of its API) - the app now brings OsmAnd to the foreground
+  first and retries the call until that succeeds, instead of requiring OsmAnd to be opened
+  manually beforehand
+* The route map and the map picker now properly free their memory when you leave them
+* Multi-waypoint routes compute faster (legs are requested in parallel instead of one after
+  another)

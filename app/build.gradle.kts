@@ -14,7 +14,7 @@ android {
         applicationId = "io.github.anka1981.bikerouteplanner"
         minSdk = 26
         targetSdk = 37
-        versionCode = 11
+        versionCode = 12
         versionName = "1.10"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

@@ -3,6 +3,8 @@ package io.github.anka1981.bikerouteplanner.data
 import android.content.Context
 import io.github.anka1981.bikerouteplanner.ui.i18n.AppStrings
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
@@ -55,28 +57,41 @@ class RouteRepository(
             settings.citySlug.lowercase(Locale.US) in BbbikeDeApi.BERLIN_SLUGS
         val avoiding = eventsAvailable && avoidEventIds.isNotEmpty()
 
-        val legs = mutableListOf<BbbikeLeg>()
-        for (i in 0 until waypoints.size - 1) {
-            val from = waypoints[i]
-            val to = waypoints[i + 1]
+        // Jede Etappe ist ein eigener, unabhaengiger bbbike-Request - bei mehreren Wegpunkten
+        // (oder mit der zusaetzlichen Ereignis-Abfrage pro Etappe) lohnt es sich, sie parallel
+        // statt nacheinander abzufragen, da sonst jede Etappe auf die vorherige wartet, obwohl
+        // keine von der anderen abhaengt.
+        val legs = (0 until waypoints.size - 1).map { i ->
+            async {
+                val from = waypoints[i]
+                val to = waypoints[i + 1]
 
-            val text = try {
-                if (avoiding) {
-                    bbbikeDeText(from, to, prefs, settings, avoidEventIds)
-                } else {
-                    apiText(from, to, prefs, settings)
+                val textDeferred = async {
+                    try {
+                        if (avoiding) {
+                            bbbikeDeText(from, to, prefs, settings, avoidEventIds)
+                        } else {
+                            apiText(from, to, prefs, settings)
+                        }
+                    } catch (e: Exception) {
+                        throw RouteComputationException(
+                            strings.legFailed(i + 1, from.label, to.label, e.message ?: strings.unknownError)
+                        )
+                    }
                 }
-            } catch (e: Exception) {
-                throw RouteComputationException(
-                    strings.legFailed(i + 1, from.label, to.label, e.message ?: strings.unknownError)
-                )
-            }
+                val eventsDeferred = if (!avoiding && eventsAvailable) {
+                    async { fetchEvents(from, to, prefs, settings) }
+                } else {
+                    null
+                }
 
-            val leg = BbbikeJsonParser.parseLeg(text) ?: throw RouteComputationException(
-                strings.unexpectedBbbikeResponse(i + 1, from.label, to.label, settings.citySlug, text.take(200))
-            )
-            legs.add(if (!avoiding && eventsAvailable) leg.copy(events = fetchEvents(from, to, prefs, settings)) else leg)
-        }
+                val text = textDeferred.await()
+                val leg = BbbikeJsonParser.parseLeg(text) ?: throw RouteComputationException(
+                    strings.unexpectedBbbikeResponse(i + 1, from.label, to.label, settings.citySlug, text.take(200))
+                )
+                if (eventsDeferred != null) leg.copy(events = eventsDeferred.await()) else leg
+            }
+        }.awaitAll()
 
         val allPoints = GpxMerger.joinLegs(legs.map { it.points })
         val merged = GpxMerger.toGpx(allPoints, buildTrackName(waypoints))

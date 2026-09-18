@@ -208,7 +208,11 @@ fun RouteMapScreen(
                             controller.setCenter(fallbackCenter)
                         }
                     }
-                }
+                },
+                // Ohne onDetach() behaelt osmdroid seinen Tile-Cache (Bitmaps) fuer diese MapView
+                // im Speicher, auch nachdem der Screen verlassen wurde - wiederholtes Oeffnen der
+                // Kartenansicht wuerde so zunehmend Speicher binden und die App verlangsamen.
+                onRelease = { it.onDetach() }
             )
         }
     }

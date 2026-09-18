@@ -205,7 +205,10 @@ fun MapPickerScreen(
                         }
                         overlays.add(0, MapEventsOverlay(receiver))
                     }
-                }
+                },
+                // Siehe RouteMapScreen: ohne onDetach() behaelt osmdroid den Tile-Cache dieser
+                // MapView im Speicher, auch nachdem der Picker geschlossen wurde.
+                onRelease = { it.onDetach() }
             )
         }
     }
