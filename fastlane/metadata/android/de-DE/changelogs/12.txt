@@ -1,0 +1,8 @@
+* OsmAnd-Navigation repariert: OsmAnd lieferte den Befehl "Route navigieren" nur, wenn sein
+  Kartenbildschirm bereits offen war (ein Detail seiner eigenen Schnittstelle) - die App holt
+  OsmAnd jetzt zuerst in den Vordergrund und wiederholt den Aufruf, bis das klappt, statt dass
+  man OsmAnd erst manuell öffnen musste
+* Die Kartenansicht und die Kartenauswahl geben ihren Speicher jetzt korrekt frei, wenn man sie
+  verlässt
+* Routen mit mehreren Wegpunkten werden schneller berechnet (Etappen laufen parallel statt
+  nacheinander)

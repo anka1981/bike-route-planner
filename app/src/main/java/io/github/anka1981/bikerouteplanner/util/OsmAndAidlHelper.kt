@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
 import net.osmand.aidlapi.IOsmAndAidlInterface
@@ -28,6 +29,21 @@ object OsmAndAidlHelper {
 
     private const val BIND_ACTION = "net.osmand.aidl.OsmandAidlServiceV2"
     private val CANDIDATE_PACKAGES = listOf("net.osmand.plus", "net.osmand", "net.osmand.dev")
+
+    // OsmAnds eigene AIDL-Implementierung (OsmandAidlApi.navigateGpxV2) liefert intern nur dann
+    // etwas anderes als false, wenn ihre MapActivity bereits existiert
+    // ("mapActivity != null && NavigateGpxHelper.saveAndNavigateGpx(...)", siehe deren Quellcode).
+    // Das Binden an den Dienst klappt aber unabhaengig davon, sobald OsmAnds Prozess laeuft - der
+    // Aufruf liefert dann sauber (ohne Exception oder Timeout) false, wenn OsmAnds Kartenbildschirm
+    // gerade nicht sichtbar ist. Deshalb OsmAnd zuerst in den Vordergrund holen und den Aufruf
+    // wiederholen, bis dessen Activity tatsaechlich aufgebaut ist.
+    // Mit 10 Versuchen a 600ms (~6s) gemessen: reicht, wenn OsmAnds Prozess schon lief, nicht aber
+    // bei einem echten Kaltstart von dessen Kartenbildschirm - dort schlugen alle 10 Versuche fehl,
+    // ein direkt darauf folgender zweiter Aufruf (OsmAnd war inzwischen hochgefahren) gelang dann
+    // sofort. Grosszuegiger bemessen, damit auch ein Kaltstart innerhalb eines einzigen Aufrufs
+    // durchlaeuft.
+    private const val NAVIGATE_MAX_ATTEMPTS = 20
+    private const val NAVIGATE_RETRY_DELAY_MS = 750L
 
     suspend fun tryNavigateGpx(context: Context, gpxContent: String, trackName: String): Boolean {
         for (packageName in CANDIDATE_PACKAGES) {
@@ -60,10 +76,17 @@ object OsmAndAidlHelper {
                 // statt ab dem der aktuellen Position naechstgelegenen Punkt.
                 setPassWholeRoute(true)
             }
-            val result = aidlInterface.navigateGpx(params)
-            Log.i(TAG, "navigateGpx($packageName) lieferte: $result")
-            if (result) {
-                bringToForeground(context, packageName)
+            // Erst in den Vordergrund holen, DANN aufrufen: navigateGpx() liefert bei OsmAnd
+            // false, solange dessen MapActivity nicht existiert, und die entsteht erst durch das
+            // Starten der Activity. Mehrere Versuche mit kurzer Pause, weil das Erstellen der
+            // Activity (insbesondere bei einem Kaltstart der Kartenansicht) etwas dauert.
+            bringToForeground(context, packageName)
+            var result = false
+            for (attempt in 1..NAVIGATE_MAX_ATTEMPTS) {
+                result = aidlInterface.navigateGpx(params)
+                Log.i(TAG, "navigateGpx($packageName) Versuch $attempt lieferte: $result")
+                if (result) break
+                delay(NAVIGATE_RETRY_DELAY_MS)
             }
             result
         } catch (e: Exception) {
@@ -91,13 +114,10 @@ object OsmAndAidlHelper {
 
     private val connections = mutableMapOf<String, ServiceConnection>()
 
-    // OsmAnd ist eine grosse App mit eigener Kartenengine; ist ihr Prozess noch nicht am Laufen,
-    // dauert das Hochfahren (das BIND_AUTO_CREATE hier erst anstoesst) auf manchen Geraeten
-    // deutlich laenger als ein paar Sekunden. Ein zu kurzes Timeout liess den Bind-Versuch dann
-    // fehlschlagen, obwohl OsmAnd kurz danach durchaus geantwortet haette - beobachtbares Symptom
-    // war, dass das Senden nur klappte, wenn OsmAnd vorher schon manuell geoeffnet (und damit warm)
-    // war. Ein bereits laufendes OsmAnd bindet weiterhin praktisch sofort, dieses Timeout greift
-    // also nur im Kaltstart-Fall.
+    // Grosszuegige Sicherheitsmarge fuer den seltenen Fall, dass OsmAnds Prozess selbst noch nicht
+    // laeuft und BIND_AUTO_CREATE ihn hier erst hochfahren muss (dessen Kartenengine kann dabei
+    // laenger als ein paar Sekunden brauchen). Lief OsmAnds Prozess schon, bindet dieser Aufruf
+    // ohnehin praktisch sofort.
     private suspend fun bindOsmAndService(context: Context, packageName: String): IBinder? =
         withTimeoutOrNull(15000) {
             suspendCancellableCoroutine { cont ->
