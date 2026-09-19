@@ -1,0 +1,5 @@
+* Fixed "Remove previous route from OsmAnd": the old route was being deleted before the new one
+  was confirmed sent, so a failed send could leave OsmAnd with no route at all. Cleanup now
+  happens only after the new route is sent successfully
+* Fixed a bug where double-tapping "Navigate in OsmAnd" could permanently forget a track,
+  leaving it uncleaned
