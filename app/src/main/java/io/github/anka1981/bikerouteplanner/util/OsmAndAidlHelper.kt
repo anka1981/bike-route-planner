@@ -6,8 +6,10 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import net.osmand.aidlapi.IOsmAndAidlInterface
 import net.osmand.aidlapi.navigation.NavigateGpxParams
@@ -45,14 +47,20 @@ object OsmAndAidlHelper {
     private const val NAVIGATE_MAX_ATTEMPTS = 20
     private const val NAVIGATE_RETRY_DELAY_MS = 750L
 
-    suspend fun tryNavigateGpx(context: Context, gpxContent: String, trackName: String): Boolean {
-        for (packageName in CANDIDATE_PACKAGES) {
-            if (navigateViaPackage(context, packageName, gpxContent, trackName)) {
-                return true
+    // aidlInterface.navigateGpx() ist ein synchroner, blockierender Binder-Aufruf (kein suspend fun);
+    // ohne den Wechsel auf Dispatchers.IO liefe der gesamte Retry-Loop (inklusive dieser Aufrufe) auf
+    // dem Thread des Aufrufers - bei RouteScreen.kt ist das der Main-Thread. Ausgerechnet im
+    // Kaltstart-Fall, den dieser Code abfaengt, kann OsmAnds Antwort spuerbar dauern, was dort zu
+    // ANRs fuehren koennte.
+    suspend fun tryNavigateGpx(context: Context, gpxContent: String, trackName: String): Boolean =
+        withContext(Dispatchers.IO) {
+            for (packageName in CANDIDATE_PACKAGES) {
+                if (navigateViaPackage(context, packageName, gpxContent, trackName)) {
+                    return@withContext true
+                }
             }
+            false
         }
-        return false
-    }
 
     private suspend fun navigateViaPackage(
         context: Context,
@@ -60,10 +68,11 @@ object OsmAndAidlHelper {
         gpxContent: String,
         trackName: String
     ): Boolean {
-        val binder = bindOsmAndService(context, packageName) ?: run {
+        val bound = bindOsmAndService(context, packageName) ?: run {
             Log.w(TAG, "bindOsmAndService($packageName) lieferte keinen Binder (Timeout oder bindService()=false)")
             return false
         }
+        val (binder, connection) = bound
         Log.i(TAG, "bindOsmAndService($packageName) erfolgreich, rufe navigateGpx auf")
         return try {
             val aidlInterface = IOsmAndAidlInterface.Stub.asInterface(binder)
@@ -93,7 +102,7 @@ object OsmAndAidlHelper {
             Log.e(TAG, "navigateGpx($packageName) warf Exception", e)
             false
         } finally {
-            unbindQuietly(context, packageName)
+            unbindQuietly(context, connection)
         }
     }
 
@@ -112,26 +121,30 @@ object OsmAndAidlHelper {
         }
     }
 
-    private val connections = mutableMapOf<String, ServiceConnection>()
-
-    // Grosszuegige Sicherheitsmarge fuer den seltenen Fall, dass OsmAnds Prozess selbst noch nicht
-    // laeuft und BIND_AUTO_CREATE ihn hier erst hochfahren muss (dessen Kartenengine kann dabei
-    // laenger als ein paar Sekunden brauchen). Lief OsmAnds Prozess schon, bindet dieser Aufruf
-    // ohnehin praktisch sofort.
-    private suspend fun bindOsmAndService(context: Context, packageName: String): IBinder? =
+    // Jeder Aufruf haelt seine eigene ServiceConnection-Instanz von bindService() bis zum passenden
+    // unbindService() - keine geteilte, nur nach Package-Namen indizierte Map mehr. Bei einem
+    // Doppeltipp (zwei parallele Aufrufe fuer dasselbe Package, z.B. weil der Button waehrend der
+    // jetzt bis zu ~30s langen Wartezeit erneut gedrueckt wird) konnte das vorher dazu fuehren,
+    // dass der finally-Block des einen Aufrufs die noch aktiv genutzte Verbindung des anderen
+    // ungebindet, waehrend die eigene Verbindung verwaist im Speicher blieb (Leak). Da jeder
+    // Aufruf jetzt seine eigene Referenz mitfuehrt, ist das strukturell ausgeschlossen.
+    private suspend fun bindOsmAndService(context: Context, packageName: String): Pair<IBinder, ServiceConnection>? =
         withTimeoutOrNull(15000) {
             suspendCancellableCoroutine { cont ->
-                val intent = Intent(BIND_ACTION).apply { setPackage(packageName) }
-                val connection = object : ServiceConnection {
+                lateinit var connection: ServiceConnection
+                connection = object : ServiceConnection {
                     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                        if (cont.isActive) cont.resume(service)
+                        if (cont.isActive) {
+                            if (service != null) cont.resume(service to connection) else cont.resume(null)
+                        }
                     }
 
                     override fun onServiceDisconnected(name: ComponentName?) {
-                        connections.remove(packageName)
+                        // Nichts zu tun: der Aufrufer haelt seine eigene Referenz und bindet sie
+                        // in seinem finally-Block selbst ab.
                     }
                 }
-                connections[packageName] = connection
+                val intent = Intent(BIND_ACTION).apply { setPackage(packageName) }
                 val bound = try {
                     context.bindService(intent, connection, Context.BIND_AUTO_CREATE)
                 } catch (e: SecurityException) {
@@ -139,23 +152,20 @@ object OsmAndAidlHelper {
                     false
                 }
                 Log.i(TAG, "bindService($packageName) Rueckgabewert: $bound")
-                if (!bound) {
-                    connections.remove(packageName)
-                    if (cont.isActive) cont.resume(null)
+                if (!bound && cont.isActive) {
+                    cont.resume(null)
                 }
                 cont.invokeOnCancellation {
-                    unbindQuietly(context, packageName)
+                    unbindQuietly(context, connection)
                 }
             }
         }
 
-    private fun unbindQuietly(context: Context, packageName: String) {
-        connections.remove(packageName)?.let {
-            try {
-                context.unbindService(it)
-            } catch (e: IllegalArgumentException) {
-                // bereits ungebunden
-            }
+    private fun unbindQuietly(context: Context, connection: ServiceConnection) {
+        try {
+            context.unbindService(connection)
+        } catch (e: IllegalArgumentException) {
+            // bereits ungebunden
         }
     }
 }
