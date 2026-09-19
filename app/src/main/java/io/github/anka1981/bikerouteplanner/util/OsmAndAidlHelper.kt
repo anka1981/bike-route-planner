@@ -9,6 +9,8 @@ import android.util.Log
 import androidx.core.content.edit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
@@ -56,6 +58,16 @@ object OsmAndAidlHelper {
     private const val OSMAND_GPX_IMPORT_RELATIVE_DIR = "import/"
     private const val LAST_TRACK_PREFS_NAME = "osmand_aidl_last_track"
 
+    // Serialisiert den kompletten Sende-Vorgang pro Package: ohne das koennten zwei Aufrufe fuer
+    // dasselbe Package (z.B. durch einen Doppeltipp auf "In OsmAnd navigieren") gleichzeitig den
+    // zuletzt gemerkten Dateinamen lesen und danach gegenseitig ueberschreiben, wodurch der
+    // tatsaechlich von OsmAnd verwendete Name eines der beiden Aufrufe verloren ginge und dessen
+    // Track dauerhaft als Fragment liegen bliebe.
+    private val packageMutexes = mutableMapOf<String, Mutex>()
+
+    private fun mutexFor(packageName: String): Mutex =
+        synchronized(packageMutexes) { packageMutexes.getOrPut(packageName) { Mutex() } }
+
     // aidlInterface.navigateGpx() ist ein synchroner, blockierender Binder-Aufruf (kein suspend fun);
     // ohne den Wechsel auf Dispatchers.IO liefe der gesamte Retry-Loop (inklusive dieser Aufrufe) auf
     // dem Thread des Aufrufers - bei RouteScreen.kt ist das der Main-Thread. Ausgerechnet im
@@ -82,28 +94,15 @@ object OsmAndAidlHelper {
         gpxContent: String,
         trackName: String,
         removePreviousTrack: Boolean
-    ): Boolean {
+    ): Boolean = mutexFor(packageName).withLock {
         val bound = bindOsmAndService(context, packageName) ?: run {
             Log.w(TAG, "bindOsmAndService($packageName) lieferte keinen Binder (Timeout oder bindService()=false)")
-            return false
+            return@withLock false
         }
         val (binder, connection) = bound
         Log.i(TAG, "bindOsmAndService($packageName) erfolgreich, rufe navigateGpx auf")
-        return try {
+        try {
             val aidlInterface = IOsmAndAidlInterface.Stub.asInterface(binder)
-
-            // Die beim letzten Mal an dieses Package gesendete Route jetzt entfernen, statt direkt
-            // nach ihrem Senden: solange die neue Route noch nicht steht, navigiert OsmAnd
-            // moeglicherweise noch mit der alten - sie sofort zu loeschen wuerde diese laufende
-            // Navigation gefaehrden. Der Aufruf ist unkritisch, wenn er fehlschlaegt (Datei schon
-            // weg, OsmAnd-Version ohne Fix fuer den frueher kaputten AIDL-Loeschbefehl, etc.) -
-            // dann bleibt hoechstens ein Fragment liegen, wie ohne dieses Feature auch.
-            if (removePreviousTrack) {
-                getLastTrackFileName(context, packageName)?.let { previousFileName ->
-                    removePreviousTrack(aidlInterface, packageName, previousFileName)
-                }
-            }
-
             val params = NavigateGpxParams(gpxContent, true, true).apply {
                 setFileName(trackName)
                 // NavigateGpxParams.passWholeRoute ist ein nullable Boolean (Bug im OsmAnd-
@@ -126,6 +125,15 @@ object OsmAndAidlHelper {
                 delay(NAVIGATE_RETRY_DELAY_MS)
             }
             if (result && removePreviousTrack) {
+                // Die vorherige Route ERST JETZT entfernen, nachdem die neue nachweislich gesendet
+                // wurde - nicht vorher: waeren alle Versuche oben fehlgeschlagen, haette man sonst
+                // die noch funktionierende alte Route verloren und stuende ganz ohne Route in
+                // OsmAnd da. Der Aufruf ist unkritisch, wenn er fehlschlaegt (Datei schon weg,
+                // OsmAnd-Version ohne Fix fuer den frueher kaputten AIDL-Loeschbefehl, etc.) - dann
+                // bleibt hoechstens ein Fragment liegen, wie ohne dieses Feature auch.
+                getLastTrackFileName(context, packageName)?.let { previousFileName ->
+                    removePreviousTrack(aidlInterface, packageName, previousFileName)
+                }
                 // navigateGpx(params) ist als "inout" deklariert (siehe IOsmAndAidlInterface.aidl):
                 // benennt OsmAnd die Datei um, weil bereits eine gleichnamige existiert, steht der
                 // tatsaechlich verwendete Name danach hier in params.getFileName(). Diesen merken,

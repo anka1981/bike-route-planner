@@ -1,0 +1,5 @@
+* "Vorherige Route in OsmAnd entfernen" repariert: die alte Route wurde bisher schon vor dem
+  Senden der neuen gelöscht - schlug das Senden fehl, stand man ganz ohne Route in OsmAnd da.
+  Jetzt wird erst nach erfolgreichem Senden aufgeräumt
+* Ein Doppeltipp auf "In OsmAnd navigieren" konnte dazu führen, dass ein Track dauerhaft
+  vergessen wurde und nie aufgeräumt wird - behoben
