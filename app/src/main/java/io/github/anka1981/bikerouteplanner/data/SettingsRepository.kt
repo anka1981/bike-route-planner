@@ -20,6 +20,7 @@ private object Keys {
     val UI_LANGUAGE = stringPreferencesKey("ui_language")
     val COLOR_THEME = stringPreferencesKey("color_theme")
     val LOAD_ROUTE_EVENTS = booleanPreferencesKey("load_route_events")
+    val REMOVE_PREVIOUS_OSMAND_TRACK = booleanPreferencesKey("remove_previous_osmand_track")
 
     val PROFILES = stringPreferencesKey("route_profiles_json")
     val ACTIVE_PROFILE_ID = stringPreferencesKey("active_route_profile_id")
@@ -38,7 +39,8 @@ class SettingsRepository(private val context: Context) {
             routingLanguage = prefs[Keys.ROUTING_LANGUAGE] ?: "de",
             uiLanguage = prefs[Keys.UI_LANGUAGE] ?: "de",
             colorTheme = prefs[Keys.COLOR_THEME] ?: "system",
-            loadRouteEvents = prefs[Keys.LOAD_ROUTE_EVENTS] ?: true
+            loadRouteEvents = prefs[Keys.LOAD_ROUTE_EVENTS] ?: true,
+            removePreviousOsmAndTrack = prefs[Keys.REMOVE_PREVIOUS_OSMAND_TRACK] ?: false
         )
     }
 
@@ -68,6 +70,7 @@ class SettingsRepository(private val context: Context) {
             prefs[Keys.UI_LANGUAGE] = settings.uiLanguage
             prefs[Keys.COLOR_THEME] = settings.colorTheme
             prefs[Keys.LOAD_ROUTE_EVENTS] = settings.loadRouteEvents
+            prefs[Keys.REMOVE_PREVIOUS_OSMAND_TRACK] = settings.removePreviousOsmAndTrack
         }
     }
 

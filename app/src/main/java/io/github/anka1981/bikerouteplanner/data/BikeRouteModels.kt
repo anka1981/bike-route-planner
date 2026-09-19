@@ -71,7 +71,12 @@ data class AppSettings(
      * Ob die Ereignisse (temporaere Sperrungen) bei www.bbbike.de abgefragt werden duerfen.
      * Diese Abfrage laeuft unverschluesselt per http, weil die Seite kein https anbietet.
      */
-    val loadRouteEvents: Boolean = true
+    val loadRouteEvents: Boolean = true,
+    /**
+     * Entfernt beim naechsten Senden einer Route die zuvor an OsmAnd gesendete Route wieder aus
+     * dessen Track-Liste (siehe OsmAndAidlHelper), damit sich dort keine Fragmente ansammeln.
+     */
+    val removePreviousOsmAndTrack: Boolean = false
 )
 
 /** Fahrzeit laut bbbike fuer eine Geschwindigkeitsstufe. */

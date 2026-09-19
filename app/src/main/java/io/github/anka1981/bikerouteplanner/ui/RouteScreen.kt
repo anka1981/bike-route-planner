@@ -319,7 +319,8 @@ fun RouteScreen(
                                 val started = OsmAndAidlHelper.tryNavigateGpx(
                                     context,
                                     gpxContent,
-                                    "BikeRoutePlanner-Route"
+                                    "BikeRoutePlanner-Route",
+                                    settings.removePreviousOsmAndTrack
                                 )
                                 osmAndStatus = if (started) null else strings.osmAndUnavailable
                             }

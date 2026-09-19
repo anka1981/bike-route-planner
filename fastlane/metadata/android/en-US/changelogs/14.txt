@@ -1,0 +1,3 @@
+* New setting "Remove previous route from OsmAnd": the next time a route is sent, removes the
+  previously sent route from OsmAnd's track list again, so fragments don't pile up there -
+  useful if OsmAnd is only used for navigating this app's routes
