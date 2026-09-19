@@ -185,6 +185,18 @@ fun SettingsScreen(
             }
             Text(strings.routeEventsHelp, style = MaterialTheme.typography.bodySmall)
 
+            Row(
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(strings.osmAndCleanupLabel, modifier = Modifier.weight(1f))
+                Switch(
+                    checked = settings.removePreviousOsmAndTrack,
+                    onCheckedChange = { viewModel.updateSettings(settings.copy(removePreviousOsmAndTrack = it)) }
+                )
+            }
+            Text(strings.osmAndCleanupHelp, style = MaterialTheme.typography.bodySmall)
+
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Button(onClick = onOpenHelp) {
                     Text(strings.helpButton)

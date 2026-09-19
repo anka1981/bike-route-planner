@@ -125,6 +125,8 @@ interface AppStrings {
     val colorThemeOptions: List<Pair<String, String>>
     val routeEventsLabel: String
     val routeEventsHelp: String
+    val osmAndCleanupLabel: String
+    val osmAndCleanupHelp: String
     val aboutButton: String
     val helpButton: String
     val helpTitle: String
@@ -293,6 +295,13 @@ object GermanStrings : AppStrings {
             "über http, weil die Seite kein https anbietet. Start und Ziel sind dabei im Netz " +
             "mitlesbar, und die Antwort ließe sich unterwegs verändern. Ausgeschaltet nimmt die " +
             "App keine Verbindung zu www.bbbike.de auf."
+    override val osmAndCleanupLabel = "Vorherige Route in OsmAnd entfernen"
+    override val osmAndCleanupHelp =
+        "Entfernt beim nächsten Senden einer Route die zuvor an OsmAnd gesendete Route wieder " +
+            "aus dessen Track-Liste, damit sich dort keine Fragmente ansammeln. Sinnvoll, wenn " +
+            "OsmAnd ausschließlich zur Navigation dieser App genutzt wird. Die zuletzt gesendete " +
+            "Route bleibt bis zum nächsten Senden in OsmAnd bestehen, damit die laufende " +
+            "Navigation nicht unterbrochen wird."
     override val colorThemeLabel = "App-Design"
     override val colorThemeOptions = listOf(
         "system" to "System",
@@ -484,6 +493,12 @@ object EnglishStrings : AppStrings {
             "because the site offers no https. Start and destination are readable on the " +
             "network, and the response could be tampered with on the way. When switched off, " +
             "the app never connects to www.bbbike.de."
+    override val osmAndCleanupLabel = "Remove previous route from OsmAnd"
+    override val osmAndCleanupHelp =
+        "The next time a route is sent, removes the previously sent route from OsmAnd's track " +
+            "list again, so fragments don't pile up there. Useful if OsmAnd is only used for " +
+            "navigating this app's routes. The most recently sent route stays in OsmAnd until " +
+            "the next one is sent, so the ongoing navigation isn't interrupted."
     override val colorThemeLabel = "App theme"
     override val colorThemeOptions = listOf(
         "system" to "System",

@@ -1,0 +1,4 @@
+* Neue Einstellung "Vorherige Route in OsmAnd entfernen": entfernt beim nächsten Senden einer
+  Route die zuvor gesendete Route wieder aus OsmAnds Track-Liste, damit sich dort keine
+  Fragmente ansammeln - sinnvoll, wenn OsmAnd ausschließlich zur Navigation dieser App genutzt
+  wird
