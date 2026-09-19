@@ -1,0 +1,4 @@
+* OsmAnd-Navigation: der Wiederholungs-Versuch lief bisher versehentlich auf dem Haupt-Thread der
+  App statt im Hintergrund - konnte die App bei einem langsamen Kaltstart von OsmAnd kurz einfrieren
+* Ein doppelter Antippen von "In OsmAnd navigieren" während der Wartezeit konnte zu einer
+  fehlerhaften Verbindung zu OsmAnd führen - behoben

@@ -1,0 +1,4 @@
+* OsmAnd navigation: the retry attempt was accidentally running on the app's main thread instead
+  of in the background, which could briefly freeze the app during a slow OsmAnd cold start
+* Fixed a bug where double-tapping "Navigate in OsmAnd" while it was still connecting could result
+  in a broken connection to OsmAnd
