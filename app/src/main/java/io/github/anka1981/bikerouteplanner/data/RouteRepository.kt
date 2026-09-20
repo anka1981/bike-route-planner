@@ -117,7 +117,7 @@ class RouteRepository(
         settings: AppSettings
     ): String = api.route(
         city = settings.citySlug,
-        appId = settings.appId,
+        appId = settings.effectiveAppId,
         start = "${from.lon},${from.lat}",
         ziel = "${to.lon},${to.lat}",
         startName = from.label,

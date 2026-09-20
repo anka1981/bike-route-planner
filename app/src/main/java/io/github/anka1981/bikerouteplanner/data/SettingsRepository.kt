@@ -13,6 +13,8 @@ import kotlinx.serialization.json.Json
 
 val Context.dataStore by preferencesDataStore(name = "bike_route_settings")
 
+private val NON_OVERRIDE_APP_IDS = setOf("guest", DEFAULT_BBBIKE_APP_ID)
+
 private object Keys {
     val APP_ID = stringPreferencesKey("app_id")
     val CITY_SLUG = stringPreferencesKey("city_slug")
@@ -34,7 +36,10 @@ class SettingsRepository(private val context: Context) {
 
     val settingsFlow: Flow<AppSettings> = context.dataStore.data.map { prefs ->
         AppSettings(
-            appId = prefs[Keys.APP_ID] ?: "guest",
+            // Aeltere Versionen legten hier "guest" (damalige Standard-appid) bzw. die eingebaute
+            // Standard-appid selbst als scheinbare Nutzereingabe ab. Beides zaehlt als "keine eigene
+            // appid", damit die Standard-appid nie im Eingabefeld auftaucht.
+            appId = prefs[Keys.APP_ID]?.takeUnless { it in NON_OVERRIDE_APP_IDS } ?: "",
             citySlug = prefs[Keys.CITY_SLUG] ?: "Berlin",
             routingLanguage = prefs[Keys.ROUTING_LANGUAGE] ?: "de",
             uiLanguage = prefs[Keys.UI_LANGUAGE] ?: "de",

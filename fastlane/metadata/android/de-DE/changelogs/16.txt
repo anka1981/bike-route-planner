@@ -1,0 +1,3 @@
+* Die bbbike-appid ist jetzt fest in der App eingebaut und wird nicht mehr angezeigt; im
+  Einstellungsfeld "Eigene bbbike appid (optional)" lässt sich weiterhin eine eigene appid
+  eintragen, die die eingebaute überschreibt
