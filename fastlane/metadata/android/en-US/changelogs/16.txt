@@ -1,0 +1,2 @@
+* The bbbike appid is now built into the app and no longer shown; the "Own bbbike appid
+  (optional)" settings field still lets you enter your own appid, which overrides the built-in one

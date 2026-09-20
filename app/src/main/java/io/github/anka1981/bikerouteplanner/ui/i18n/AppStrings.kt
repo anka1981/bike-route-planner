@@ -280,12 +280,13 @@ object GermanStrings : AppStrings {
     override val loadingCities = "Städteliste wird von bbbike.org geladen..."
     override fun citiesLoaded(count: Int) = "$count Städte geladen."
     override fun cityUpdateFailed(message: String) = "Aktualisierung fehlgeschlagen: $message"
-    override val appIdLabel = "bbbike appid"
+    override val appIdLabel = "Eigene bbbike appid (optional)"
     override val appIdShowDesc = "appid anzeigen"
     override val appIdHideDesc = "appid verbergen"
     override val appIdHelp =
-        "\"guest\" funktioniert nur eingeschränkt zum Testen. Für regelmäßige " +
-            "Nutzung auf bbbike.org eine eigene appid anfragen (siehe bbbike.org/api.html)."
+        "Leer lassen, um die in der App eingebaute Standard-appid zu verwenden. Eine hier " +
+            "eingetragene eigene appid überschreibt sie. Eine eigene appid gibt es auf " +
+            "Anfrage bei bbbike.org (siehe bbbike.org/api.html)."
     override val routingLanguageLabel = "Sprache der Routing-Antwort (de, en, es, fr, ru)"
     override val uiLanguageLabel = "App-Sprache"
     override val routeEventsLabel = "Ereignisse auf der Route laden"
@@ -478,12 +479,13 @@ object EnglishStrings : AppStrings {
     override val loadingCities = "Loading city list from bbbike.org..."
     override fun citiesLoaded(count: Int) = "$count cities loaded."
     override fun cityUpdateFailed(message: String) = "Update failed: $message"
-    override val appIdLabel = "bbbike appid"
+    override val appIdLabel = "Own bbbike appid (optional)"
     override val appIdShowDesc = "show appid"
     override val appIdHideDesc = "hide appid"
     override val appIdHelp =
-        "\"guest\" only works in a limited way for testing. For regular use, request your " +
-            "own appid at bbbike.org (see bbbike.org/api.html)."
+        "Leave empty to use the default appid built into the app. An own appid entered here " +
+            "overrides it. You can request your own appid from bbbike.org (see " +
+            "bbbike.org/api.html)."
     override val routingLanguageLabel = "Routing response language (de, en, es, fr, ru)"
     override val uiLanguageLabel = "App language"
     override val routeEventsLabel = "Load events on the route"

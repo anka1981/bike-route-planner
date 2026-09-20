@@ -58,8 +58,16 @@ data class RouteProfile(
 
 val defaultRouteProfile = RouteProfile(id = "default", name = "Standard")
 
+/** Eingebaute bbbike-appid, die genutzt wird, solange der Nutzer keine eigene eingetragen hat. */
+const val DEFAULT_BBBIKE_APP_ID = "android4"
+
 data class AppSettings(
-    val appId: String = "guest",
+    /**
+     * Vom Nutzer eingetragene eigene bbbike-appid. Leer heisst: eingebaute Standard-appid
+     * verwenden (siehe [effectiveAppId]). Die Standard-appid selbst wird hier nie abgelegt und
+     * damit auch nie in der Oberflaeche angezeigt.
+     */
+    val appId: String = "",
     val citySlug: String = "bbbike",
     /** Sprache der bbbike-Routing-Antwort (Straßennamen etc.): de, en, es, fr, ru. */
     val routingLanguage: String = "de",
@@ -77,7 +85,11 @@ data class AppSettings(
      * dessen Track-Liste (siehe OsmAndAidlHelper), damit sich dort keine Fragmente ansammeln.
      */
     val removePreviousOsmAndTrack: Boolean = false
-)
+) {
+    /** Die tatsaechlich an bbbike gesendete appid: die eigene des Nutzers, sonst die Standard-appid. */
+    val effectiveAppId: String
+        get() = appId.trim().ifEmpty { DEFAULT_BBBIKE_APP_ID }
+}
 
 /** Fahrzeit laut bbbike fuer eine Geschwindigkeitsstufe. */
 data class SpeedTime(
