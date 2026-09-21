@@ -1,13 +1,37 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
 }
 
+// Lokale Signatur-Daten fuer Release-Builds (Keystore und Passwort liegen bewusst ausserhalb des
+// Repos). Fehlt die Datei - etwa beim Nachbau durch F-Droid, das unsigniert baut und sein Ergebnis
+// mit dem hier signierten APK vergleicht -, entsteht die Release-APK unsigniert.
+val releaseSigningProps = Properties().apply {
+    val path = System.getenv("BIKEROUTEPLANNER_SIGNING_PROPERTIES")
+        ?: "${System.getProperty("user.home")}/.android/bikerouteplanner-release.properties"
+    val f = file(path)
+    if (f.isFile) f.inputStream().use { load(it) }
+}
+val hasReleaseSigning = releaseSigningProps.getProperty("storeFile") != null
+
 android {
     namespace = "io.github.anka1981.bikerouteplanner"
     compileSdk {
         version = release(37)
+    }
+
+    signingConfigs {
+        if (hasReleaseSigning) {
+            create("release") {
+                storeFile = file(releaseSigningProps.getProperty("storeFile"))
+                storePassword = releaseSigningProps.getProperty("storePassword")
+                keyAlias = releaseSigningProps.getProperty("keyAlias")
+                keyPassword = releaseSigningProps.getProperty("keyPassword")
+            }
+        }
     }
 
     // Fuer reproduzierbare Builds (F-Droid vergleicht seinen Build mit der hier signierten APK)
@@ -24,7 +48,7 @@ android {
         applicationId = "io.github.anka1981.bikerouteplanner"
         minSdk = 26
         targetSdk = 37
-        versionCode = 18
+        versionCode = 19
         versionName = "1.11"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -38,11 +62,11 @@ android {
             vcsInfo {
                 include = false
             }
-            // Persoenliche App ohne Play-Store-Vertrieb: nutzt bewusst denselben Debug-Key wie
-            // die bisher installierten Debug-Builds, damit dieser Release-Build die bestehende
-            // Installation direkt ersetzen kann statt wegen unterschiedlicher Signaturen zuerst
-            // deinstalliert werden zu muessen.
-            signingConfig = signingConfigs.getByName("debug")
+            // Eigener Release-Schluessel statt Debug-Schluessel: F-Droids APK-Pruefung stuft das
+            // Debug-Zertifikat ("CN=Android Debug") als kritisch ein.
+            if (hasReleaseSigning) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             optimization {
                 enable = false
             }

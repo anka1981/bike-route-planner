@@ -10,20 +10,20 @@ AutoName: BikeRoutePlanner
 
 RepoType: git
 Repo: https://github.com/anka1981/bike-route-planner.git
-
-Binaries: https://github.com/anka1981/bike-route-planner/releases/download/v%v-%c/BikeRoutePlanner-%v-%c.apk
+Binaries: 
+  https://github.com/anka1981/bike-route-planner/releases/download/v%v-%c/BikeRoutePlanner-%v-%c.apk
 
 Builds:
   - versionName: '1.11'
-    versionCode: 18
-    commit: v1.11-18
+    versionCode: 19
+    commit: v1.11-19
     subdir: app
     gradle:
       - prod
 
-AllowedAPKSigningKeys: fb39a267471d52bb0085a6408c996598f8d3044369b3bcd85a9e43c4d20c5efb
+AllowedAPKSigningKeys: dd61e4e0e786863d564d8bc339ccd28195bdd63307dcb632bb998ab1fe25ac7b
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
 CurrentVersion: '1.11'
-CurrentVersionCode: 18
+CurrentVersionCode: 19
