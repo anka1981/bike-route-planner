@@ -1,0 +1,4 @@
+* Neuer eigener Signaturschlüssel statt des Debug-Schlüssels (Voraussetzung für die Aufnahme
+  bei F-Droid). Achtung: Wegen der geänderten Signatur lässt sich diese Version nicht über eine
+  ältere installieren - die alte App bitte einmalig deinstallieren (Einstellungen, Favoriten und
+  Profile gehen dabei verloren)
