@@ -1,0 +1,3 @@
+* The build is now reproducible (needed so F-Droid can publish the app with your
+  signature); nothing changes for the app itself
+* Added the app icon as icon.png for the store listing

@@ -1,0 +1,3 @@
+* Der Build ist jetzt reproduzierbar (Voraussetzung, damit F-Droid die App mit deiner
+  Signatur veröffentlichen kann); für die App selbst ändert sich nichts
+* App-Symbol als icon.png für die Store-Beschreibung ergänzt

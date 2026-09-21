@@ -10,11 +10,21 @@ android {
         version = release(37)
     }
 
+    // Fuer reproduzierbare Builds (F-Droid vergleicht seinen Build mit der hier signierten APK)
+    // muss die Build-Tools-Version fest vorgegeben sein.
+    buildToolsVersion = "36.0.0"
+
+    // Google-Abhaengigkeitsinfo-Block aus dem APK-Signaturblock heraushalten (nicht reproduzierbar).
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+
     defaultConfig {
         applicationId = "io.github.anka1981.bikerouteplanner"
         minSdk = 26
         targetSdk = 37
-        versionCode = 17
+        versionCode = 18
         versionName = "1.11"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -22,6 +32,12 @@ android {
 
     buildTypes {
         release {
+            // Die VCS-Info-Datei (META-INF/version-control-info.textproto) enthaelt bei einem Build
+            // im Git-Checkout Pfad und Revision und wuerde jeden Nachbau bei F-Droid vom lokal
+            // gebauten APK unterscheiden.
+            vcsInfo {
+                include = false
+            }
             // Persoenliche App ohne Play-Store-Vertrieb: nutzt bewusst denselben Debug-Key wie
             // die bisher installierten Debug-Builds, damit dieser Release-Build die bestehende
             // Installation direkt ersetzen kann statt wegen unterschiedlicher Signaturen zuerst
