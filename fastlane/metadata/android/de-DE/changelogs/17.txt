@@ -1,0 +1,2 @@
+* Build-Konfiguration bereinigt: Gradle lädt beim Bauen keine JDKs mehr aus dem Netz nach
+  (nötig für den Bau bei F-Droid); für die App selbst ändert sich nichts

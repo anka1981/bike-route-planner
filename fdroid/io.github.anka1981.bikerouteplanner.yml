@@ -1,14 +1,3 @@
-# Bau-Rezept fuer F-Droid.
-#
-# Diese Datei gehoert nicht in diese App, sondern in F-Droids Datensammlung
-# (fdroiddata), dort unter metadata/io.github.anka1981.bikerouteplanner.yml.
-# Sie liegt hier als versionierte Kopie, damit sie bei jeder Version mitwaechst.
-# Beim Einreichen die Kommentarzeilen weglassen, fdroiddata schreibt die Dateien
-# automatisch um.
-#
-# Titel, Kurz- und Langbeschreibung sowie die Bildschirmfotos holt sich F-Droid
-# selbst aus dem Ordner fastlane/ dieses Repositorys.
-
 Categories:
   - Navigation
   - Sports & Health
@@ -21,51 +10,9 @@ RepoType: git
 Repo: https://github.com/anka1981/bike-route-planner.git
 
 Builds:
-  - versionName: '1.9'
-    versionCode: 10
-    commit: v1.9
-    subdir: app
-    gradle:
-      - prod
-
-  - versionName: '1.10'
-    versionCode: 11
-    commit: v1.10
-    subdir: app
-    gradle:
-      - prod
-
-  - versionName: '1.10'
-    versionCode: 12
-    commit: v1.10-12
-    subdir: app
-    gradle:
-      - prod
-
-  - versionName: '1.10'
-    versionCode: 13
-    commit: v1.10-13
-    subdir: app
-    gradle:
-      - prod
-
   - versionName: '1.11'
-    versionCode: 14
-    commit: v1.11
-    subdir: app
-    gradle:
-      - prod
-
-  - versionName: '1.11'
-    versionCode: 15
-    commit: v1.11-15
-    subdir: app
-    gradle:
-      - prod
-
-  - versionName: '1.11'
-    versionCode: 16
-    commit: v1.11-16
+    versionCode: 17
+    commit: v1.11-17
     subdir: app
     gradle:
       - prod
@@ -73,4 +20,4 @@ Builds:
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
 CurrentVersion: '1.11'
-CurrentVersionCode: 16
+CurrentVersionCode: 17
