@@ -1,0 +1,2 @@
+* Cleaned up the build configuration: Gradle no longer downloads JDKs from the network at
+  build time (needed for building at F-Droid); nothing changes for the app itself
