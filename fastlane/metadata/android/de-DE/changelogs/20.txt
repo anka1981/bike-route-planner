@@ -1,0 +1,2 @@
+* Code-Verkleinerung (R8) aktiviert, dadurch deutlich kleineres APK. Keine sichtbaren
+  Änderungen, gründlich getestet (Routenberechnung, Kartenanzeige, OsmAnd-Navigation)

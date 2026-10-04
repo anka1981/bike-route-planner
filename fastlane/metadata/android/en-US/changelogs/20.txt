@@ -1,0 +1,2 @@
+* Enabled code shrinking (R8), resulting in a significantly smaller APK. No visible changes,
+  thoroughly tested (route calculation, map view, OsmAnd navigation)
