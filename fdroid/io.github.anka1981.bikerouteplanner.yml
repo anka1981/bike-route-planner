@@ -15,8 +15,8 @@ Binaries:
 
 Builds:
   - versionName: '1.11'
-    versionCode: 19
-    commit: v1.11-19
+    versionCode: 20
+    commit: d81c5a9adca4307d939eccc6e0e1dccf8fc8a1b7
     subdir: app
     gradle:
       - prod
@@ -26,4 +26,4 @@ AllowedAPKSigningKeys: dd61e4e0e786863d564d8bc339ccd28195bdd63307dcb632bb998ab1f
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
 CurrentVersion: '1.11'
-CurrentVersionCode: 19
+CurrentVersionCode: 20
