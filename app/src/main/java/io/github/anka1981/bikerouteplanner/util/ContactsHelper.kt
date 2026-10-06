@@ -1,21 +1,21 @@
 package io.github.anka1981.bikerouteplanner.util
 
-import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.provider.ContactsContract
 
 /**
- * Liest die erste hinterlegte Postadresse eines ueber den System-Kontaktepicker
- * ausgewaehlten Kontakts aus. Erfordert die Berechtigung READ_CONTACTS.
+ * Liest die Postadresse aus dem Dateneintrag aus, den der Postadress-Kontaktepicker
+ * (ACTION_PICK auf [ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI]) zurueckgibt.
+ * Dieser Picker gewaehrt fuer die ausgewaehlte Zeile eine befristete Leseberechtigung, sodass die
+ * App dafuer keine eigene READ_CONTACTS-Berechtigung braucht.
  */
-fun readContactAddress(context: Context, contactUri: Uri): String? {
-    val contactId = ContentUris.parseId(contactUri)
+fun readContactAddress(context: Context, addressDataUri: Uri): String? {
     val cursor = context.contentResolver.query(
-        ContactsContract.Data.CONTENT_URI,
+        addressDataUri,
         arrayOf(ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS),
-        "${ContactsContract.Data.CONTACT_ID} = ? AND ${ContactsContract.Data.MIMETYPE} = ?",
-        arrayOf(contactId.toString(), ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE),
+        null,
+        null,
         null
     )
     cursor.use {

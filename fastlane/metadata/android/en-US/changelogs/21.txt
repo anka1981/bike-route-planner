@@ -1,0 +1,2 @@
+* Removed the "read contacts" permission: picking an address from a contact still works, now via
+  a more targeted system picker that no longer needs the full contacts permission
