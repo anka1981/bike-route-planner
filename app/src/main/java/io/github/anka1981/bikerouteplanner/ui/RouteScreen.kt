@@ -1,7 +1,10 @@
 package io.github.anka1981.bikerouteplanner.ui
 
+import android.app.Activity
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.provider.ContactsContract
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -130,12 +133,16 @@ fun RouteScreen(
 
     var pendingContactWaypointId by remember { mutableStateOf<String?>(null) }
 
+    // Picker direkt auf Postadressen statt auf ganze Kontakte: Android gewaehrt fuer die
+    // ausgewaehlte Zeile eine befristete Leseberechtigung, wir brauchen daher keine eigene
+    // READ_CONTACTS-Berechtigung (siehe readContactAddress).
     val pickContactLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickContact()
-    ) { uri ->
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
         val waypointId = pendingContactWaypointId
         pendingContactWaypointId = null
-        if (uri != null && waypointId != null) {
+        val uri = result.data?.data
+        if (result.resultCode == Activity.RESULT_OK && uri != null && waypointId != null) {
             val address = readContactAddress(context, uri)
             if (address != null) {
                 viewModel.searchWaypointWithText(waypointId, address)
@@ -145,27 +152,11 @@ fun RouteScreen(
         }
     }
 
-    val contactsPermissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) {
-            pickContactLauncher.launch(null)
-        } else {
-            pendingContactWaypointId = null
-        }
-    }
-
     fun requestContactForWaypoint(waypointId: String) {
         pendingContactWaypointId = waypointId
-        val hasPermission = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.READ_CONTACTS
-        ) == PackageManager.PERMISSION_GRANTED
-        if (hasPermission) {
-            pickContactLauncher.launch(null)
-        } else {
-            contactsPermissionLauncher.launch(Manifest.permission.READ_CONTACTS)
-        }
+        pickContactLauncher.launch(
+            Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI)
+        )
     }
 
     Scaffold(

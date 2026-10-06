@@ -1,0 +1,2 @@
+* Berechtigung "Kontakte lesen" entfernt: Die Adresse aus einem Kontakt zu übernehmen funktioniert
+  weiterhin, dank eines gezielteren System-Pickers aber ohne die volle Kontakte-Berechtigung

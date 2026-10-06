@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <!-- Ab targetSdk 30 blendet Android andere Apps per "Package Visibility" standardmaessig
          aus. Ohne diese Deklaration kann das Binden an OsmAnds AIDL-Dienst fehlschlagen bzw.
